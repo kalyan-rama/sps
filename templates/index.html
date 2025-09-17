@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Home - SPS Sarees{% endblock %}
+
+{% block content %}
+
+
+<div class="products">
+  {% for p in products %}
+  <div class="product-card">
+    <a href="{{ url_for('product_detail', slug=p.slug) }}">
+      <img src="{{ p.image or url_for('static', filename='images/placeholder.jpg') }}" 
+           alt="{{ p.name }}" width="200">
+    </a>
+    <h3>{{ p.name }}</h3>
+    <p>₹{{ "%.2f"|format(p.price) }}</p>
+    <form action="{{ url_for('add_to_cart', product_id=p.id) }}" method="post">
+      <input type="number" name="qty" value="1" min="1">
+      <button type="submit">🛒 Add to Cart</button>
+    </form>
+  </div>
+  {% else %}
+  <p>No products found.</p>
+  {% endfor %}
+</div>
+{% endblock %}

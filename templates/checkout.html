@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Checkout - SPS Sarees{% endblock %}
+
+{% block content %}
+<section class="checkout">
+  <h1>Checkout</h1>
+
+  {% if success %}
+    <div class="alert alert-success">
+      ✅ Order placed successfully! A confirmation email has been sent.
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-primary">Continue Shopping</a>
+
+  {% else %}
+    <form method="POST" action="{{ url_for('checkout') }}">
+      <h2>Customer Details</h2>
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" name="email" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <label>Phone</label>
+        <input type="text" name="phone" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea name="address" class="form-control" required></textarea>
+      </div>
+
+      <h2>Order Summary</h2>
+      {% if products %}
+        <ul class="cart-summary">
+          {% for item in products %}
+            <li>
+              {{ item.product.name }} (x{{ item.qty }}) — ₹{{ "%.2f"|format(item.subtotal) }}
+            </li>
+          {% endfor %}
+        </ul>
+        <p><strong>Total: ₹{{ "%.2f"|format(total) }}</strong></p>
+      {% else %}
+        <p>Your cart is empty.</p>
+      {% endif %}
+
+      <button type="submit" class="btn btn-primary">Place Order</button>
+    </form>
+  {% endif %}
+</section>
+{% endblock %}

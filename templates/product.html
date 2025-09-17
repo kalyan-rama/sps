@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+{% block content %}
+  <div class="product-detail">
+    <img src="{{ product.image or url_for('static', filename='images/placeholder.jpg') }}" alt="{{ product.name }}">
+    <div class="meta">
+      <h2>{{ product.name }}</h2>
+      <p class="price">₹{{ '%.2f'|format(product.price) }}</p>
+      <p>{{ product.description }}</p>
+      <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="post">
+        <label>Qty <input type="number" name="qty" value="1" min="1" max="{{ product.stock }}"></label>
+        <button type="submit" class="btn">Add to cart</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

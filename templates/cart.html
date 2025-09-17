@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Your Cart{% endblock %}
+{% block content %}
+  <h2>Your Cart</h2>
+  {% if items %}
+    <form action="{{ url_for('update_cart') }}" method="post">
+      <table class="cart-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Subtotal</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in items %}
+            <tr>
+              <td>{{ row.product.name }}</td>
+              <td>
+                <input type="number" name="qty_{{ row.product.id }}" value="{{ row.qty }}" min="0">
+              </td>
+              <td>₹{{ '%.2f'|format(row.subtotal) }}</td>
+              <td>
+                <!-- Separate delete form (not nested) -->
+               <form action="{{ url_for('delete_from_cart', product_id=row.product.id) }}" method="post" style="display:inline;">
+        <button type="submit" class="btn danger">🗑️ Remove</button>
+      </form>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <div class="cart-total">Total: ₹{{ '%.2f'|format(total) }}</div>
+      <div class="cart-actions">
+        <button type="submit" class="btn secondary">Update cart</button>
+        <a class="btn" href="{{ url_for('checkout') }}">Checkout</a>
+      </div>
+    </form>
+  {% else %}
+    <p>Your cart is empty. <a href="{{ url_for('index') }}">Shop now</a></p>
+  {% endif %}
+{% endblock %}
